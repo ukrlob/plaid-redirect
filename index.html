@@ -1,1 +1,26 @@
-
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+  </head>
+  <body>
+    <p>Redirecting back to Plaid...</p>
+    <script>
+      // Этот скрипт просто проверяет, есть ли в URL специальные параметры от Plaid
+      // и если есть, он возобновляет процесс подключения.
+      const url = new URL(window.location.href);
+      if (url.searchParams.has('oauth_state_id')) {
+        try {
+          // Мы не знаем здесь link_token, поэтому передаем null.
+          // Plaid Link достаточно умен, чтобы восстановить сессию из URL.
+          Plaid.create({
+            token: null,
+            receivedRedirectUri: window.location.href,
+          }).open();
+        } catch (e) {
+          console.error("Plaid Link could not be reinitialized:", e);
+        }
+      }
+    </script>
+  </body>
+</html>
